@@ -10,9 +10,9 @@ button{font-variant-numeric:lining-nums tabular-nums;font-family:'Fraunces',Geor
 .orbw{position:relative;width:min(60vw,50vh,180px);aspect-ratio:1;display:flex;align-items:center;justify-content:center}
 .orb{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#D2202A,#9A0002 50%,#5E0003 100%);box-shadow:0 6px 18px rgba(94,0,3,.35),inset 0 2px 6px rgba(255,255,255,.18);transform:scale(.55);transition:transform 4s ease-in-out}
 .ring{position:absolute;inset:-4px;border-radius:50%;border:1px dashed var(--soft2)}
-.lbl{position:relative;font:italic 600 15px/1.2 'Fraunces',Georgia,serif;color:#FFF3F0;text-align:center;text-shadow:0 1px 2px rgba(60,0,4,.4)}
+.lbl{position:relative;font:600 15px/1.2 'Fraunces',Georgia,serif;color:#FFF3F0;text-align:center;text-shadow:0 1px 2px rgba(60,0,4,.4)}
 .lbl small{display:block;font:400 22px/1 'Fraunces',Georgia,serif;margin-top:4px}
-.sub{font:italic 12px/1.4 'Fraunces',Georgia,serif;color:var(--mute);text-align:center}
+.sub{font:12px/1.4 'Fraunces',Georgia,serif;color:var(--mute);text-align:center}
 #go{font:600 13px/1 'Fraunces',Georgia,serif;border-radius:99px;padding:9px 22px;background:var(--red);color:var(--on)}
 .s1{right:2px;top:2px;width:16%;max-width:56px;transform:rotate(14deg)}
 
@@ -22,6 +22,8 @@ body:before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.08;p
 @media (prefers-color-scheme:dark){body:before{background:#000;opacity:.38}}
 .w{inset:14px !important;background:var(--bg);border-radius:14px;box-shadow:0 3px 12px rgba(60,0,4,.18)}
 .stk{z-index:2}
+
+/*flat*/.orb{background:var(--red) !important;box-shadow:none !important}.lbl{font-style:normal !important;font-size:20px !important;text-shadow:none !important}.lbl small{font-size:26px !important}
 </style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body>
 <div class="w">
 <div class="orbw"><div class="ring"></div><div class="orb" id="orb"></div><div class="lbl" id="lbl">ready?<small>♡</small></div></div>
