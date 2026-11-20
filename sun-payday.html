@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Celestial Sun payday</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--f:'Fraunces',Georgia,serif;
+--bg:#FFFFFF;--paper:#FBF3E8;--ink:#3E1006;--mute:#9A6A55;--red:#D9561A;--red2:#E8743A;--terra:#B0441A;--gold:#F2A93B;--clay:#E39A6B;
+--soft:#F3E2CF;--soft2:#E8CCB0;--line:#EEDCC8;--on:#FFF8EC;--cream:#F6EBDA;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--paper:#24170F;--ink:#F6EBDA;--mute:#C9A58E;--red:#E2652A;--red2:#F08A4B;--terra:#D06A3A;--gold:#F2A93B;--clay:#E39A6B;
+--soft:#3A2418;--soft2:#4C3020;--line:#3A2619;--on:#FFF8EC;--cream:#F6EBDA;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:var(--f)}
+button,input{font-variant-numeric:lining-nums tabular-nums;font-family:var(--f);cursor:pointer;border:0}
+
+/* card: warm paper, small sun + label on top, thin dune line at the bottom */
+.w{inset:34px 8px 8px !important;background:var(--paper);border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);padding:12px 16px !important;overflow:hidden}
+body:before{content:attr(data-en);position:fixed;z-index:3;left:8px;right:8px;top:6px;height:24px;padding-left:28px;
+ font:600 11px/24px var(--f);letter-spacing:3.5px;color:var(--terra);white-space:nowrap;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='%23B0441A'%3E%3Cpath d='M0-11.5L1.4-6.6H-1.4ZM0 11.5L1.4 6.6H-1.4ZM-11.5 0L-6.6 1.4V-1.4ZM11.5 0L6.6 1.4V-1.4ZM-8.1-8.1L-3.8-5.6-5.6-3.8ZM8.1 8.1L3.8 5.6 5.6 3.8ZM8.1-8.1L5.6-3.8 3.8-5.6ZM-8.1 8.1L-5.6 3.8-3.8 5.6Z'/%3E%3C/g%3E%3Ccircle r='5.4' fill='%23D9561A'/%3E%3Ccircle r='3.2' fill='%23F2A93B'/%3E%3C/svg%3E") 4px 50%/18px no-repeat}
+body:after{content:"";position:fixed;z-index:3;left:8px;right:8px;bottom:8px;height:10px;border-radius:0 0 14px 14px;pointer-events:none;
+ background:radial-gradient(60% 120% at 22% 100%,var(--clay) 0 60%,transparent 61%),radial-gradient(55% 140% at 78% 100%,var(--soft2) 0 60%,transparent 61%);opacity:.55}
+.stk{display:none}
+
+.w{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;gap:12px}
+.h{font:italic 600 17px/1.2 'Fraunces',Georgia,serif;color:var(--red)}
+.row{display:flex;justify-content:center;gap:8px}
+.u{background:var(--soft);border-radius:12px;min-width:62px;padding:10px 6px 7px}
+.u b{display:block;font:400 28px/1 'Fraunces',Georgia,serif;color:var(--ink)}
+.u i{font:italic 11px/1.6 'Fraunces',Georgia,serif;color:var(--mute)}
+.f{font:italic 11px/1.3 'Fraunces',Georgia,serif;color:var(--mute)}
+.s1{left:2px;top:2px;width:15%;max-width:52px;transform:rotate(-12deg)}
+.h{color:var(--terra)}.u{background:var(--terra);border-radius:10px}.u b{color:var(--on)}.u i{color:rgba(255,248,236,.72);letter-spacing:1px}
+@media (prefers-color-scheme:dark){.h{color:var(--ink)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body data-en="PAYDAY">
+<div class="w"><div class="h">payday is coming ☼</div>
+<div class="row"><div class="u"><b id="d">0</b><i>days</i></div><div class="u"><b id="hh">0</b><i>hours</i></div><div class="u"><b id="mm">0</b><i>mins</i></div></div>
+<div class="f" id="f"></div></div>
+<script>
+function up(){const n=new Date();let t=new Date(n.getFullYear(),n.getMonth()+1,0);if(t<=new Date(n.getFullYear(),n.getMonth(),n.getDate()))t=new Date(n.getFullYear(),n.getMonth()+2,0);
+const ms=t-n,d=Math.floor(ms/864e5),h=Math.floor(ms%864e5/36e5),m=Math.floor(ms%36e5/6e4);
+document.getElementById('d').textContent=d;document.getElementById('hh').textContent=h;document.getElementById('mm').textContent=m;
+document.getElementById('f').textContent=d===0?'it\'s today, treat yourself ☼':'last day of the month · '+t.toLocaleDateString('en-US',{month:'short',day:'numeric'})}
+up();setInterval(up,30000);
+</script></body></html>

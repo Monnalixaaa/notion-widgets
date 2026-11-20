@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Celestial Sun clock</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--f:'Fraunces',Georgia,serif;
+--bg:#FFFFFF;--paper:#FBF3E8;--ink:#3E1006;--mute:#9A6A55;--red:#D9561A;--red2:#E8743A;--terra:#B0441A;--gold:#F2A93B;--clay:#E39A6B;
+--soft:#F3E2CF;--soft2:#E8CCB0;--line:#EEDCC8;--on:#FFF8EC;--cream:#F6EBDA;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--paper:#24170F;--ink:#F6EBDA;--mute:#C9A58E;--red:#E2652A;--red2:#F08A4B;--terra:#D06A3A;--gold:#F2A93B;--clay:#E39A6B;
+--soft:#3A2418;--soft2:#4C3020;--line:#3A2619;--on:#FFF8EC;--cream:#F6EBDA;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:var(--f)}
+button,input{font-variant-numeric:lining-nums tabular-nums;font-family:var(--f);cursor:pointer;border:0}
+
+/* card: warm paper, small sun + label on top, thin dune line at the bottom */
+.w{inset:34px 8px 8px !important;background:var(--paper);border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);padding:12px 16px !important;overflow:hidden}
+body:before{content:attr(data-en);position:fixed;z-index:3;left:8px;right:8px;top:6px;height:24px;padding-left:28px;
+ font:600 11px/24px var(--f);letter-spacing:3.5px;color:var(--terra);white-space:nowrap;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-12 -12 24 24'%3E%3Cg fill='%23B0441A'%3E%3Cpath d='M0-11.5L1.4-6.6H-1.4ZM0 11.5L1.4 6.6H-1.4ZM-11.5 0L-6.6 1.4V-1.4ZM11.5 0L6.6 1.4V-1.4ZM-8.1-8.1L-3.8-5.6-5.6-3.8ZM8.1 8.1L3.8 5.6 5.6 3.8ZM8.1-8.1L5.6-3.8 3.8-5.6ZM-8.1 8.1L-5.6 3.8-3.8 5.6Z'/%3E%3C/g%3E%3Ccircle r='5.4' fill='%23D9561A'/%3E%3Ccircle r='3.2' fill='%23F2A93B'/%3E%3C/svg%3E") 4px 50%/18px no-repeat}
+body:after{content:"";position:fixed;z-index:3;left:8px;right:8px;bottom:8px;height:10px;border-radius:0 0 14px 14px;pointer-events:none;
+ background:radial-gradient(60% 120% at 22% 100%,var(--clay) 0 60%,transparent 61%),radial-gradient(55% 140% at 78% 100%,var(--soft2) 0 60%,transparent 61%);opacity:.55}
+.stk{display:none}
+
+.w{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:10px}
+.hi{font:italic 13px/1.2 'Fraunces',Georgia,serif;color:var(--mute);letter-spacing:.3px}
+.fl{display:flex;gap:8px}
+.tile{position:relative;width:clamp(64px,30vw,104px);aspect-ratio:1/1.05;border-radius:12px;background:linear-gradient(var(--red2) 0 50%,var(--red) 50% 100%);
+ color:#FFF7F5;display:flex;align-items:center;justify-content:center;font:400 clamp(38px,19vw,68px)/1 'Fraunces',Georgia,serif;box-shadow:0 4px 10px rgba(120,0,6,.22)}
+.tile:after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--bg);opacity:.85}
+.tile:before{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:6px;margin-top:-3px;background:radial-gradient(circle at 3px 3px,var(--bg) 2.5px,transparent 3px) left/6px 6px no-repeat,radial-gradient(circle at 3px 3px,var(--bg) 2.5px,transparent 3px) right/6px 6px no-repeat}
+.ap{font:italic 12px/1 'Fraunces',Georgia,serif;color:var(--mute);margin-top:-4px}
+.date{font:italic 15px/1.2 'Fraunces',Georgia,serif;color:var(--ink)}
+.s1{width:22%;max-width:80px;right:4px;bottom:4px;transform:rotate(-8deg)}
+.s2{width:15%;max-width:54px;left:4px;top:4px;transform:rotate(-12deg)}
+.tile{background:linear-gradient(var(--red2) 0 50%,var(--red) 50% 100%);color:var(--on);box-shadow:0 3px 0 rgba(62,16,6,.18)}
+.tile:after{background:var(--paper)}.tile:before{display:none}
+.ap{color:var(--terra);letter-spacing:2px}.date{color:var(--terra)}
+@media (prefers-color-scheme:dark){.date{color:var(--ink)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body data-en="CLOCK">
+<div class="w"><div class="hi" id="hi">hey sunshine ☼</div>
+<div class="fl"><div class="tile" id="h">00</div><div class="tile" id="m">00</div></div>
+<div class="ap" id="ap"></div><div class="date" id="d"></div></div>
+<script>
+const tick=()=>{const n=new Date(),H=n.getHours();
+document.getElementById('hi').textContent=(H<12?'good morning':H<18?'good afternoon':'good evening')+', sunshine ☼';
+document.getElementById('h').textContent=String(H).padStart(2,'0');
+document.getElementById('m').textContent=String(n.getMinutes()).padStart(2,'0');
+document.getElementById('ap').textContent=H<12?'· am ·':'· pm ·';
+document.getElementById('d').textContent=n.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})};
+tick();setInterval(tick,5000);
+</script></body></html>
