@@ -39,9 +39,13 @@ button{transition:background .2s,color .2s}
 .modes button,.nav button,.ctl button,#go,#rs{background:var(--soft) !important;color:var(--red) !important;box-shadow:none !important;font-weight:400 !important}
 .modes button.on,#go{background:var(--red) !important;color:var(--on) !important}
 /* photo cover band on top, like a Notion page cover */
-:root{--cvh:clamp(48px,26vh,100px)}
+:root{--cvh:clamp(36px,20vh,96px)}
 .cv{position:fixed;left:0;right:0;top:0;height:var(--cvh);background-size:cover;background-position:center;z-index:0}
 .w{z-index:1}
+/* fit under the cover even in short Notion embeds */
+.ring{width:min(62vw,calc((100vh - var(--cvh)) * .55),170px) !important}
+.orbw{width:min(60vw,calc((100vh - var(--cvh)) * .55),170px) !important}
+.w{gap:8px !important;padding-top:6px !important;padding-bottom:6px !important}
 /* clock: big serif numerals, no tiles */
 .tile{background:none !important;box-shadow:none !important;color:var(--red) !important;width:auto !important;aspect-ratio:auto !important;font-size:clamp(46px,22vw,78px) !important;letter-spacing:-1px}
 .tile:before,.tile:after{display:none !important}
