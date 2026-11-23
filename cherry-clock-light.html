@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cherry clock</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFFFFF;--ink:#2A1A17;--red:#9A0002;--red2:#C0121A;--soft:#F7ECE9;--soft2:#EFD9D3;--mute:#9C7F78;--line:#EEDFDA;--on:#FFFFFF;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--ink:#F1E6E1;--red:#E35D66;--red2:#F07C84;--soft:#262020;--soft2:#3A2B2B;--mute:#A8938E;--line:#332828;--on:#191919;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:'Fraunces',Georgia,serif}
+button{font-variant-numeric:lining-nums tabular-nums;font-family:'Fraunces',Georgia,serif;cursor:pointer;border:0}
+.stk{position:absolute;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(42,26,23,.18))}
+
+.w{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:10px}
+.hi{font:13px/1.2 'Fraunces',Georgia,serif;color:var(--mute);letter-spacing:.3px}
+.fl{display:flex;gap:8px}
+.tile{position:relative;width:clamp(64px,30vw,104px);aspect-ratio:1/1.05;border-radius:12px;background:linear-gradient(var(--red2) 0 50%,var(--red) 50% 100%);
+ color:#FFF7F5;display:flex;align-items:center;justify-content:center;font:400 clamp(38px,19vw,68px)/1 'Fraunces',Georgia,serif;box-shadow:0 4px 10px rgba(120,0,6,.22)}
+.tile:after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:var(--bg);opacity:.85}
+.tile:before{content:"";position:absolute;left:-3px;right:-3px;top:50%;height:6px;margin-top:-3px;background:radial-gradient(circle at 3px 3px,var(--bg) 2.5px,transparent 3px) left/6px 6px no-repeat,radial-gradient(circle at 3px 3px,var(--bg) 2.5px,transparent 3px) right/6px 6px no-repeat}
+.ap{font:12px/1 'Fraunces',Georgia,serif;color:var(--mute);margin-top:-4px}
+.date{font:15px/1.2 'Fraunces',Georgia,serif;color:var(--ink)}
+.s1{width:22%;max-width:80px;right:4px;bottom:4px;transform:rotate(-8deg)}
+.s2{width:15%;max-width:54px;left:4px;top:4px;transform:rotate(-12deg)}
+
+/* pattern frame (Commission Studio look): pattern fills edge-to-edge, solid card on top */
+body{background:var(--bg) none center/cover no-repeat}
+body:before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.08;pointer-events:none}
+@media (prefers-color-scheme:dark){body:before{background:#000;opacity:.38}}
+.w{inset:14px !important;background:var(--bg);border-radius:14px;box-shadow:0 3px 12px rgba(60,0,4,.18)}
+.stk{z-index:2}
+
+/* v2 light: flat cream, dashed stitch, no photo frame or stickers */
+body{background:#FBF3EE !important}
+body:before{display:none !important}
+.w{inset:8px !important;background:#FFFDFB !important;border-radius:14px;box-shadow:none !important;
+ border:1.5px dashed rgba(154,0,2,.35)}
+.tile{background:var(--red) !important;box-shadow:none !important}
+.orb{box-shadow:none !important}
+@media (prefers-color-scheme:dark){body{background:#191919 !important}.w{background:#1E1A1A !important;border-color:rgba(227,93,102,.35)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body>
+<div class="w"><div class="hi" id="hi">hey gorgeous ♡</div>
+<div class="fl"><div class="tile" id="h">00</div><div class="tile" id="m">00</div></div>
+<div class="ap" id="ap"></div><div class="date" id="d"></div></div>
+<script>
+const tick=()=>{const n=new Date(),H=n.getHours();
+document.getElementById('hi').textContent=(H<12?'good morning':H<18?'good afternoon':'good evening')+', gorgeous ♡';
+document.getElementById('h').textContent=String(H).padStart(2,'0');
+document.getElementById('m').textContent=String(n.getMinutes()).padStart(2,'0');
+document.getElementById('ap').textContent=H<12?'· am ·':'· pm ·';
+document.getElementById('d').textContent=n.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})};
+tick();setInterval(tick,5000);
+</script></body></html>

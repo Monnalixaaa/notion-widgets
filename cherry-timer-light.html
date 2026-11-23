@@ -1,0 +1,75 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cherry focus timer</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFFFFF;--ink:#2A1A17;--red:#9A0002;--red2:#C0121A;--soft:#F7ECE9;--soft2:#EFD9D3;--mute:#9C7F78;--line:#EEDFDA;--on:#FFFFFF;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--ink:#F1E6E1;--red:#E35D66;--red2:#F07C84;--soft:#262020;--soft2:#3A2B2B;--mute:#A8938E;--line:#332828;--on:#191919;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:'Fraunces',Georgia,serif}
+button{font-variant-numeric:lining-nums tabular-nums;font-family:'Fraunces',Georgia,serif;cursor:pointer;border:0}
+.stk{position:absolute;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(42,26,23,.18))}
+
+.w{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:8px}
+.modes{display:flex;gap:6px}
+.modes button{font:12px/1 'Fraunces',Georgia,serif;color:var(--red);background:var(--soft);border-radius:99px;padding:7px 12px}
+.modes button.on{background:var(--red);color:var(--on)}
+.ring{position:relative;width:min(62vw,52vh,180px);aspect-ratio:1}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:6;stroke-linecap:round}
+.trk{stroke:var(--soft)}.bar{stroke:var(--red);transition:stroke-dashoffset .9s linear}
+.tm{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tm b{font:400 clamp(24px,10vw,38px)/1 'Fraunces',Georgia,serif;color:var(--ink);letter-spacing:1px}
+.tm i{font:12px/1.5 'Fraunces',Georgia,serif;color:var(--mute)}
+.tm b{cursor:text;border-radius:8px;padding:0 4px}.tm b:hover{background:var(--soft)}
+.tm input{width:3.2ch;font:400 clamp(24px,10vw,38px)/1 'Fraunces',Georgia,serif;color:var(--ink);background:var(--soft);border:0;border-radius:8px;text-align:center;outline:none;font-variant-numeric:lining-nums tabular-nums;-moz-appearance:textfield}
+.tm input::-webkit-inner-spin-button{-webkit-appearance:none}
+.ctl{display:flex;gap:8px;align-items:center}
+.ctl .pm{width:34px;height:34px;padding:0;border-radius:50%;background:var(--soft);color:var(--red);font:600 18px/1 'Fraunces',Georgia,serif}
+.ctl button{font:600 13px/1 'Fraunces',Georgia,serif;border-radius:99px;padding:9px 20px}
+#go{background:var(--red);color:var(--on)}
+#rs{background:var(--soft);color:var(--red)}
+.s1{left:2px;bottom:2px;width:16%;max-width:56px;transform:rotate(-12deg)}
+
+/* pattern frame (Commission Studio look): pattern fills edge-to-edge, solid card on top */
+body{background:var(--bg) none center/cover no-repeat}
+body:before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.08;pointer-events:none}
+@media (prefers-color-scheme:dark){body:before{background:#000;opacity:.38}}
+.w{inset:14px !important;background:var(--bg);border-radius:14px;box-shadow:0 3px 12px rgba(60,0,4,.18)}
+.stk{z-index:2}
+
+/* v2 light: flat cream, dashed stitch, no photo frame or stickers */
+body{background:#FBF3EE !important}
+body:before{display:none !important}
+.w{inset:8px !important;background:#FFFDFB !important;border-radius:14px;box-shadow:none !important;
+ border:1.5px dashed rgba(154,0,2,.35)}
+.tile{background:var(--red) !important;box-shadow:none !important}
+.orb{box-shadow:none !important}
+@media (prefers-color-scheme:dark){body{background:#191919 !important}.w{background:#1E1A1A !important;border-color:rgba(227,93,102,.35)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body>
+<div class="w">
+<div class="modes"><button class="on" data-m="25">focus 25</button><button data-m="5">break 5</button><button data-m="15">rest 15</button></div>
+<div class="ring"><svg viewBox="0 0 100 100"><circle class="trk" cx="50" cy="50" r="45"/><circle class="bar" id="bar" cx="50" cy="50" r="45"/></svg>
+<div class="tm"><b id="t">25:00</b><i id="lbl">stay focused, babe</i></div></div>
+<div class="ctl"><button class="pm" id="mn" title="-1 min">−</button><button id="go">start</button><button id="rs">reset</button><button class="pm" id="pl" title="+1 min">+</button></div></div>
+<script>
+const C=2*Math.PI*45,bar=document.getElementById('bar');bar.style.strokeDasharray=C;
+let total=1500,left=1500,run=null;
+const msg={25:'stay focused, babe',5:'sip some water ♡',15:'stretch & breathe'};
+function show(){const m=Math.floor(left/60),s=left%60;document.getElementById('t').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+bar.style.strokeDashoffset=C*(1-left/total)}
+function stop(){clearInterval(run);run=null;document.getElementById('go').textContent='start'}
+document.getElementById('go').onclick=()=>{if(run){stop();return}
+ document.getElementById('go').textContent='pause';run=setInterval(()=>{left--;show();if(left<=0){stop();left=0;show();document.getElementById('lbl').textContent='done! you ate ♡'}},1000)};
+document.getElementById('rs').onclick=()=>{stop();left=total;show()};
+document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.modes button').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ stop();total=left=+b.dataset.m*60;document.getElementById('lbl').textContent=msg[b.dataset.m];show()});
+// custom time: −/+ buttons (1 min) or click the time and type minutes
+function setMin(m){m=Math.max(1,Math.min(180,Math.round(m)||1));stop();total=left=m*60;
+ document.querySelectorAll('.modes button').forEach(x=>x.classList.toggle('on',+x.dataset.m===m));
+ document.getElementById('lbl').textContent=msg[m]||'your time, your rules ♡';show()}
+document.getElementById('mn').onclick=()=>setMin(Math.ceil(total/60)-1);
+document.getElementById('pl').onclick=()=>setMin(Math.ceil(total/60)+1);
+document.getElementById('t').onclick=function(){if(run)return;const b=this,inp=document.createElement('input');
+ inp.type='number';inp.min=1;inp.max=180;inp.value=Math.ceil(total/60);b.replaceWith(inp);inp.focus();inp.select();
+ let done=false;const fin=()=>{if(done)return;done=true;inp.replaceWith(b);setMin(+inp.value)};
+ inp.onblur=fin;inp.onkeydown=e=>{if(e.key==='Enter')fin();if(e.key==='Escape'){inp.value=Math.ceil(total/60);fin()}}};
+document.getElementById('t').title='click to type minutes';
+show();
+</script></body></html>

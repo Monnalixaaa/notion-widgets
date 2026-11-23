@@ -1,0 +1,56 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cherry music</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFFFFF;--ink:#2A1A17;--red:#9A0002;--red2:#C0121A;--soft:#F7ECE9;--soft2:#EFD9D3;--mute:#9C7F78;--line:#EEDFDA;--on:#FFFFFF;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--ink:#F1E6E1;--red:#E35D66;--red2:#F07C84;--soft:#262020;--soft2:#3A2B2B;--mute:#A8938E;--line:#332828;--on:#191919;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:'Fraunces',Georgia,serif}
+button{font-variant-numeric:lining-nums tabular-nums;font-family:'Fraunces',Georgia,serif;cursor:pointer;border:0}
+.stk{position:absolute;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(42,26,23,.18))}
+
+.w{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:12px;padding:8px 4px}
+.top{display:flex;align-items:center;gap:14px}
+.rec{position:relative;flex:none;width:64px;height:64px;border-radius:50%;
+ background:repeating-radial-gradient(circle,#1d1414 0 2px,#2a1d1d 2px 4px);box-shadow:0 3px 8px rgba(42,26,23,.25);animation:sp 6s linear infinite}
+.rec:after{content:"";position:absolute;inset:22px;border-radius:50%;background:radial-gradient(circle at 40% 35%,var(--red2),var(--red));box-shadow:0 0 0 3px #1d1414}
+.rec i{position:absolute;left:50%;top:50%;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:var(--bg);z-index:2}
+@keyframes sp{to{transform:rotate(360deg)}}
+.tx{min-width:0}
+.k{font:12px/1.2 'Fraunces',Georgia,serif;color:var(--mute)}
+.t{font:600 19px/1.15 'Fraunces',Georgia,serif;color:var(--red);margin:3px 0 8px}
+.ch{display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.ch a{text-decoration:none;font:12px/1 'Fraunces',Georgia,serif;padding:6px 10px;border-radius:99px;background:var(--soft);color:var(--ink)}
+.ch a.on{background:var(--red);color:var(--on)}
+.pl{border-radius:12px;overflow:hidden;height:80px;background:var(--soft)}
+iframe{display:block;width:100%;height:80px;border:0}
+.s1{right:0;top:0;width:15%;max-width:46px;transform:rotate(12deg)}
+
+/* pattern frame (Commission Studio look): pattern fills edge-to-edge, solid card on top */
+body{background:var(--bg) none center/cover no-repeat}
+body:before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.08;pointer-events:none}
+@media (prefers-color-scheme:dark){body:before{background:#000;opacity:.38}}
+.w{inset:14px !important;background:var(--bg);border-radius:14px;box-shadow:0 3px 12px rgba(60,0,4,.18)}
+.stk{z-index:2}
+
+/* v2 light: flat cream, dashed stitch, no photo frame or stickers */
+body{background:#FBF3EE !important}
+body:before{display:none !important}
+.w{inset:8px !important;background:#FFFDFB !important;border-radius:14px;box-shadow:none !important;
+ border:1.5px dashed rgba(154,0,2,.35)}
+.tile{background:var(--red) !important;box-shadow:none !important}
+.orb{box-shadow:none !important}
+@media (prefers-color-scheme:dark){body{background:#191919 !important}.w{background:#1E1A1A !important;border-color:rgba(227,93,102,.35)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body>
+<div class="w">
+ <div class="top"><div class="rec"><i></i></div>
+  <div class="tx"><div class="k">now playing ♡</div><div class="t" id="t">lofi beats</div>
+  </div></div>
+ <div class="ch" id="ch"></div>
+</div>
+<script>
+const L=[['lofi','lofi beats','37i9dQZF1DWWQRwui0ExPn'],['jazz','soft jazz','37i9dQZF1DWV7EzJMK2FUI'],['piano','peaceful piano','37i9dQZF1DX4sWSpwq3LiO'],['pop','today\'s hits','37i9dQZF1DXcBWIGoYBM5M']];
+const ch=document.getElementById('ch'),t=document.getElementById('t');
+let cur=0;try{cur=+localStorage.getItem('cm')||0}catch(e){}
+function set(i){cur=i;t.textContent=L[i][1];
+ [...ch.children].forEach((b,j)=>b.classList.toggle('on',j===i));try{localStorage.setItem('cm',i)}catch(e){}}
+L.forEach((p,i)=>{const b=document.createElement('a');b.textContent=p[0]+' ↗';b.href='https://open.spotify.com/playlist/'+p[2];b.target='_blank';b.rel='noopener';b.onclick=()=>set(i);ch.appendChild(b)});
+set(cur);
+</script></body></html>

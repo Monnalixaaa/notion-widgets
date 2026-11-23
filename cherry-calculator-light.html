@@ -1,0 +1,65 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cherry calculator</title><style>*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#FFFFFF;--ink:#2A1A17;--red:#9A0002;--red2:#C0121A;--soft:#F7ECE9;--soft2:#EFD9D3;--mute:#9C7F78;--line:#EEDFDA;--on:#FFFFFF;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#191919;--ink:#F1E6E1;--red:#E35D66;--red2:#F07C84;--soft:#262020;--soft2:#3A2B2B;--mute:#A8938E;--line:#332828;--on:#191919;color-scheme:dark}}
+html,body{font-variant-numeric:lining-nums tabular-nums;height:100%;background:var(--bg);color:var(--ink);overflow:hidden;font-family:'Fraunces',Georgia,serif}
+button{font-variant-numeric:lining-nums tabular-nums;font-family:'Fraunces',Georgia,serif;cursor:pointer;border:0}
+.stk{position:absolute;pointer-events:none;filter:drop-shadow(0 3px 4px rgba(42,26,23,.18))}
+
+.w{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:6px}
+.calc{width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px}
+.scr{background:var(--soft);border-radius:12px;padding:10px 14px;text-align:right;min-height:66px;display:flex;flex-direction:column;justify-content:flex-end}
+.scr i{font:12px/1.2 'Fraunces',Georgia,serif;color:var(--mute);min-height:14px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.scr b{font:400 30px/1.1 'Fraunces',Georgia,serif;color:var(--ink);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.keys{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.keys button{font:600 16px/1 'Fraunces',Georgia,serif;border-radius:10px;padding:11px 0;background:var(--bg);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.keys button:active{transform:translateY(1px)}
+.keys .op{background:var(--soft);color:var(--red);box-shadow:none}
+.keys .fn{color:var(--mute);font-style:normal;font-size:13px}
+.keys .eq{background:var(--red);color:var(--on);box-shadow:none}
+.keys .z{grid-column:span 2}
+.s1{right:2px;top:2px;width:15%;max-width:52px;transform:rotate(12deg)}
+
+/* pattern frame (Commission Studio look): pattern fills edge-to-edge, solid card on top */
+body{background:var(--bg) none center/cover no-repeat}
+body:before{content:"";position:fixed;inset:0;background:var(--bg);opacity:.08;pointer-events:none}
+@media (prefers-color-scheme:dark){body:before{background:#000;opacity:.38}}
+.w{inset:14px !important;background:var(--bg);border-radius:14px;box-shadow:0 3px 12px rgba(60,0,4,.18)}
+.stk{z-index:2}
+
+/* v2 light: flat cream, dashed stitch, no photo frame or stickers */
+body{background:#FBF3EE !important}
+body:before{display:none !important}
+.w{inset:8px !important;background:#FFFDFB !important;border-radius:14px;box-shadow:none !important;
+ border:1.5px dashed rgba(154,0,2,.35)}
+.tile{background:var(--red) !important;box-shadow:none !important}
+.orb{box-shadow:none !important}
+@media (prefers-color-scheme:dark){body{background:#191919 !important}.w{background:#1E1A1A !important;border-color:rgba(227,93,102,.35)}}
+</style><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400;1,9..144,600&display=swap" rel="stylesheet"></head><body>
+<div class="w"><div class="calc"><div class="scr"><i id="h"></i><b id="v">0</b></div>
+<div class="keys">
+<button class="fn" data-k="C">AC</button><button class="fn" data-k="B">⌫</button><button class="fn" data-k="%">%</button><button class="op" data-k="/">÷</button>
+<button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button><button class="op" data-k="*">×</button>
+<button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button><button class="op" data-k="-">−</button>
+<button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button><button class="op" data-k="+">+</button>
+<button class="z" data-k="0">0</button><button data-k=".">.</button><button class="eq" data-k="=">=</button>
+</div></div></div>
+<script>
+let cur='0',acc=null,op=null,fresh=false;const v=document.getElementById('v'),h=document.getElementById('h');
+const sym={'/':'÷','*':'×','-':'−','+':'+'};
+const fmt=x=>{if(!isFinite(x))return 'oops';const r=Math.round(x*1e10)/1e10;return Math.abs(r)>=1e12?r.toExponential(4):r.toLocaleString('en-US',{maximumFractionDigits:8})};
+const calc=(a,b,o)=>o==='+'?a+b:o==='-'?a-b:o==='*'?a*b:b===0?NaN:a/b;
+function show(){v.textContent=cur.includes('.')&&!fresh?cur.replace(/^(-?\d+)/,m=>(+m).toLocaleString('en-US')):fmt(+cur);h.textContent=acc!==null&&op?fmt(acc)+' '+sym[op]:''}
+function press(k){
+ if(/\d/.test(k)){cur=(fresh||cur==='0')?k:cur+k;fresh=false}
+ else if(k==='.'){if(fresh){cur='0.';fresh=false}else if(!cur.includes('.'))cur+='.'}
+ else if(k==='C'){cur='0';acc=null;op=null}
+ else if(k==='B'){cur=cur.length>1?cur.slice(0,-1):'0'}
+ else if(k==='%'){cur=String(+cur/100)}
+ else if(k==='='){if(op!==null){cur=String(calc(acc,+cur,op));acc=null;op=null;fresh=true}}
+ else{if(op!==null&&!fresh)acc=calc(acc,+cur,op);else if(acc===null||!fresh)acc=+cur;op=k;fresh=true}
+ show()}
+document.querySelectorAll('.keys button').forEach(b=>b.onclick=()=>press(b.dataset.k));
+addEventListener('keydown',e=>{const m={Enter:'=',Backspace:'B',Escape:'C'};const k=m[e.key]||e.key;if(/^[\d.+\-*\/%=]$/.test(k)||['B','C'].includes(k)){e.preventDefault();press(k)}});
+show();
+</script></body></html>
